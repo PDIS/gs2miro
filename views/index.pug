@@ -1,0 +1,14 @@
+doctype html
+html
+  head
+    title Google Sheet to Miro
+
+  body
+    form(action="/" method="POST")
+      span Google Sheet:
+      input(type="text" name="sheet")
+      br
+      span Miro Board Name:
+      input(type="text" name="board")
+      br
+      input(type="submit" value="submit")
