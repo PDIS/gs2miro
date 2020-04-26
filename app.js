@@ -27,7 +27,6 @@ router.post('/', async (ctx) => {
   ctx.body = await fs.createReadStream(filename);
   await ctx.attachment(filename)
   await middlewares.deletefile(filename)
-  //https://docs.google.com/spreadsheets/d/e/2PACX-1vRTTodYxT8D5r_PS6GjHAoTMMFj-JQKHQ6o_GN7Srg_NvAJMa27ah1xtB5Z7Y2c0FrDGwddZTq0wgDs/pub?output=xlsx
 });
 
 app.use(router.routes());
