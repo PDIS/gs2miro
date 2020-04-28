@@ -26,6 +26,7 @@ module.exports = {
       'lv3': 1,
       'lv4': 1,
       'lv5': 1,
+      'lv6': 1,
       'color': 0
     }
 
@@ -178,6 +179,11 @@ module.exports = {
         'text': ''
       }
 
+      let presentdiff = {
+        'id': 0,
+        'text': ''
+      }
+
       let response = {
         'id': 0,
         'text': ''
@@ -251,6 +257,17 @@ module.exports = {
                   MakeLine(description.id, solution.id)
                 }
                 break
+              case 6: //雖有解法但還是有面臨到的困難
+                if (text !== '') {
+                  level = 4
+                  color = 15821951
+                  presentdiff.id = id
+                  presentdiff.text = text
+                  MakeSticker(id, text, color, level, counter.lv4)
+                  counter.lv4++
+                  MakeLine(solution.id, presentdiff.id)
+                }
+                break
               case 7: //填寫解法的人
                 if (text !== '') {
                   let isOld = false
@@ -267,13 +284,13 @@ module.exports = {
                 break
               case 9: //政府回應
                 if (text !== '') {
-                  level = 4
+                  level = 5
                   color = 16751944
                   response.id = id
                   response.text = text
-                  MakeSticker(id, text, color, level, counter.lv4)
-                  counter.lv4++
-                  MakeLine(solution.id, response.id)
+                  MakeSticker(id, text, color, level, counter.lv5)
+                  counter.lv5++
+                  MakeLine(presentdiff.id, response.id)
                   let isOld = false
                   labels.map(l => {
                     if (l.text === department.text) {
@@ -288,12 +305,12 @@ module.exports = {
                 break
               case 10: //困難
                 if (text !== '') {
-                  level = 5
+                  level = 6
                   color = 15821951
                   difficulty.id = id
                   difficulty.text = text
-                  MakeSticker(id, text, color, level, counter.lv5)
-                  counter.lv5++
+                  MakeSticker(id, text, color, level, counter.lv6)
+                  counter.lv6++
                   MakeLine(response.id, difficulty.id)
                   let isOld = false
                   labels.map(l => {
