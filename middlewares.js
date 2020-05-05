@@ -34,6 +34,28 @@ module.exports = {
       return Math.floor(Math.random() * 8999999999999) + 1000000000000
     }
 
+    const CheckMultiLabels = (text) => {
+      const reg = /、/g
+      if (reg.test(text)) {
+        return text.split('、')
+      } else {
+        return text
+      }
+    }
+
+    const CheckisExist = (id, text) => {
+      let isOld = false
+      labels.map(l => {
+        if (l.text === text) {
+          isOld = true
+          l.widgets.push(id)
+        }
+      })
+      if (isOld == false) {
+        MakeLabel(id, text)
+      }
+    }
+
     const MakeSticker = (id, text, color, level, counter) => {
       let n = Math.ceil(Math.sqrt(text.length))
       let textarray = []
@@ -48,7 +70,7 @@ module.exports = {
         newtext += `<p>${textarray[i]}</p>`
       }
       let sticker = {
-        "x": counter * 1000,
+        "x": counter * 500,
         "y": level * 500,
         "width": 199.0,
         "height": 228.0,
@@ -111,36 +133,17 @@ module.exports = {
         counter.color = 0
       }
       let color = labelcolors[counter.color]
-      let reg = /、/g
-      if (reg.test(text)) {
-        let textarray = text.split('、')
-        textarray.map(t => {
-          color = labelcolors[counter.color]
-          let label = {
-            "text": t,
-            "style": {
-              "c": color
-            },
-            "widgets": [sticker],
-            "id": id
-          }
-          labels.push(label)
-          order.push(id)
-          counter.color++
-        })
-      } else {
-        let label = {
-          "text": text,
-          "style": {
-            "c": color
-          },
-          "widgets": [sticker],
-          "id": id
-        }
-        labels.push(label)
-        order.push(id)
-        counter.color++
+      let label = {
+        "text": text,
+        "style": {
+          "c": color
+        },
+        "widgets": [sticker],
+        "id": id
       }
+      labels.push(label)
+      order.push(id)
+      counter.color++
     }
 
     board.name = filename
@@ -234,15 +237,13 @@ module.exports = {
                 break
               case 3: //填寫細節的人
                 if (text !== '') {
-                  let isOld = false
-                  labels.map(l => {
-                    if (l.text === text) {
-                      isOld = true
-                      l.widgets.push(description.id)
-                    }
-                  })
-                  if (isOld == false) {
-                    MakeLabel(description.id, text)
+                  const result = CheckMultiLabels(text)
+                  if (typeof result === 'string') {
+                    CheckisExist(description.id, text)
+                  } else {
+                    result.map(t => {
+                      CheckisExist(description.id, t)
+                    })
                   }
                 }
                 break
@@ -268,17 +269,17 @@ module.exports = {
                   MakeLine(solution.id, presentdiff.id)
                 }
                 break
-              case 7: //填寫解法的人
+              case 7: //提出解法的人
                 if (text !== '') {
-                  let isOld = false
-                  labels.map(l => {
-                    if (l.text === text) {
-                      isOld = true
-                      l.widgets.push(solution.id)
-                    }
-                  })
-                  if (isOld == false) {
-                    MakeLabel(solution.id, text)
+                  const result = CheckMultiLabels(text)
+                  if (typeof result === 'string') {
+                    CheckisExist(solution.id, text)
+                    CheckisExist(presentdiff.id, text)
+                  } else {
+                    result.map(t => {
+                      CheckisExist(solution.id, t)
+                      CheckisExist(presentdiff.id, t)
+                    })
                   }
                 }
                 break
@@ -291,15 +292,13 @@ module.exports = {
                   MakeSticker(id, text, color, level, counter.lv5)
                   counter.lv5++
                   MakeLine(presentdiff.id, response.id)
-                  let isOld = false
-                  labels.map(l => {
-                    if (l.text === department.text) {
-                      isOld = true
-                      l.widgets.push(response.id)
-                    }
-                  })
-                  if (isOld == false) {
-                    MakeLabel(response.id, department.text)
+                  const result = CheckMultiLabels(department.text)
+                  if (typeof result === 'string') {
+                    CheckisExist(response.id, department.text)
+                  } else {
+                    result.map(t => {
+                      CheckisExist(response.id, department.text)
+                    })
                   }
                 }
                 break
@@ -312,15 +311,13 @@ module.exports = {
                   MakeSticker(id, text, color, level, counter.lv6)
                   counter.lv6++
                   MakeLine(response.id, difficulty.id)
-                  let isOld = false
-                  labels.map(l => {
-                    if (l.text === department.text) {
-                      isOld = true
-                      l.widgets.push(difficulty.id)
-                    }
-                  })
-                  if (isOld == false) {
-                    MakeLabel(difficulty.id, department.text)
+                  const result = CheckMultiLabels(department.text)
+                  if (typeof result === 'string') {
+                    CheckisExist(difficulty.id, department.text)
+                  } else {
+                    result.map(t => {
+                      CheckisExist(difficulty.id, department.text)
+                    })
                   }
                 }
                 break
